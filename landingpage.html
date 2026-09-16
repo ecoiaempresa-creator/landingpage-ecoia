@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoIA - Software de Energia Solar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --green: #2e7d32;
+            --dark-green: #1b4332;
+            --black: #111111;
+            --dark-grey: #1a1a1a;
+            --white: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--white); color: var(--black); }
+        a { text-decoration: none; color: inherit; }
+        
+        /* Navbar - Apenas a Logo Centralizada */
+        header {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            color: var(--white);
+            z-index: 10;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .logo { font-size: 28px; font-weight: bold; letter-spacing: 3px; color: var(--white); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+
+        /* Hero Section com Imagem Direta da Internet para não bugar */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1508514177221-188b1c77eca2?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            padding: 100px 20px 50px;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.65); z-index: 1; 
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; width: 100%; }
+        .hero h1 { font-size: 36px; margin-bottom: 15px; font-weight: 400; font-family: 'Georgia', serif; }
+        .hero p { font-size: 15px; margin-bottom: 30px; line-height: 1.6; }
+        
+        /* Ajuste Definitivo do Vídeo (Proporção 16:9) */
+        .video-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            border: 5px solid #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            background-color: #000;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Mantém a proporção 16:9 perfeita */
+            height: 0;
+            overflow: hidden;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        .hero-footer-text { font-size: 14px; font-weight: bold; margin-bottom: 30px; line-height: 1.5; text-transform: uppercase; }
+        
+        /* Botão com animação de pulso */
+        .btn-acesso {
+            background-color: var(--green); color: var(--white);
+            padding: 15px 40px; font-size: 14px; font-weight: bold; border-radius: 30px;
+            display: inline-block; transition: background 0.3s;
+            animation: pulse 2s infinite; /* Adicionado animação aqui */
+        }
+        .btn-acesso:hover { background-color: #246227; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(46, 125, 50, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+        }
+
+        /* Features Section */
+        .features { padding: 80px 10%; text-align: center; background: var(--white); }
+        .features-header h2 { font-family: 'Georgia', serif; font-size: 28px; font-weight: normal; color: #333; margin-bottom: 15px; }
+        .features-header p { font-size: 15px; color: #666; max-width: 800px; margin: 0 auto 50px; line-height: 1.6; }
+        .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+        .feature-card { display: flex; flex-direction: column; align-items: center; }
+        .feature-icon {
+            width: 70px; height: 70px; background-color: #6da485; color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; margin-bottom: 20px;
+        }
+        .feature-card h3 { font-size: 15px; font-family: 'Georgia', serif; margin-bottom: 15px; color: #333; text-transform: uppercase; }
+        .feature-card p { font-size: 14px; color: #666; line-height: 1.5; }
+
+        /* Why Choose Section */
+        .why-choose { display: flex; min-height: 500px; }
+        .why-image {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1592833159155-c62df1b65634?q=80&w=2070&auto=format&fit=crop') center/cover;
+        }
+        .why-text {
+            flex: 1; background-color: #3b6b58; color: var(--white);
+            padding: 80px 10%; display: flex; flex-direction: column; justify-content: center;
+        }
+        .why-text .subtitle { font-size: 12px; text-transform: uppercase; margin-bottom: 5px; }
+        .why-text h2 { font-family: 'Georgia', serif; font-size: 28px; font-weight: normal; margin-bottom: 25px; }
+        .why-text p { font-size: 14px; line-height: 1.6; margin-bottom: 30px; color: #e0e0e0; }
+        .why-list { list-style: none; }
+        .why-list li { margin-bottom: 15px; font-size: 14px; display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .why-list li i { color: #81c784; font-size: 18px; }
+
+        /* ======== ALTERAÇÃO PRINCIPAL AQUI ======== */
+        /* Testimonials Section (Antiga Parte Cinza) agora com Imagem de Fundo e Parallax */
+        .testimonials { 
+            position: relative;
+            padding: 100px 10%; 
+            /* Imagem focada no nicho solar com efeito parallax (fixed) */
+            background-image: url('https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed; /* Isso cria a animação ao rolar a tela */
+            background-position: center;
+            text-align: center; 
+        }
+        /* Película Cinza Clara para manter a identidade de cor e não atrapalhar o texto */
+        .testimonials::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(245, 245, 245, 0.90); /* Cinza translúcido */
+            z-index: 1;
+        }
+        .testimonials h2, .test-grid {
+            position: relative;
+            z-index: 2; /* Mantém o conteúdo acima do fundo */
+        }
+
+        .testimonials h2 { font-family: 'Georgia', serif; font-size: 28px; margin-bottom: 50px; color: #333; font-weight: bold; }
+        .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .test-card {
+            background: rgba(255, 255, 255, 0.95); /* Levemente transparente */
+            padding: 30px; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: left;
+            border-top: 4px solid var(--green);
+            transition: transform 0.3s ease; /* Efeito hover nos cards */
+        }
+        .test-card:hover {
+            transform: translateY(-10px);
+        }
+        .test-card i { color: var(--green); font-size: 24px; margin-bottom: 15px; }
+        .test-card p { font-size: 14px; color: #444; font-style: italic; margin-bottom: 20px; line-height: 1.6; }
+        .test-card h4 { font-size: 15px; color: #111; font-weight: bold;}
+
+        /* Footer */
+        footer { background-color: var(--black); color: #999; font-size: 13px; }
+        
+        /* ======== OUTRA ALTERAÇÃO AQUI ======== */
+        /* Contato do Footer (Antigo fundo Cinza Escuro) com Imagem Solar */
+        .footer-contact {
+            position: relative;
+            display: flex; justify-content: center; gap: 50px; padding: 50px 20px;
+            /* Fundo escuro agora mesclado com imagem solar */
+            background: linear-gradient(rgba(26, 26, 26, 0.9), rgba(26, 26, 26, 0.9)), url('https://images.unsplash.com/photo-1611365892117-00ac5ef43c90?auto=format&fit=crop&w=1920&q=80') center/cover;
+            border-bottom: 1px solid #333;
+        }
+
+        .contact-item { display: flex; align-items: center; gap: 15px; }
+        .contact-icon {
+            width: 40px; height: 40px; background-color: var(--green); color: #fff;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        .contact-info strong { display: block; color: #fff; font-size: 14px; margin-bottom: 3px; }
+        
+        .footer-content {
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            text-align: center;
+            padding: 80px 10%;
+        }
+        .footer-col {
+            max-width: 900px;
+        }
+        .footer-col h4 { 
+            color: #fff; 
+            font-family: 'Georgia', serif; 
+            font-size: 24px; 
+            font-weight: normal; 
+            margin-bottom: 30px; 
+            text-transform: uppercase;
+        }
+        .footer-col p { 
+            line-height: 1.8; 
+            margin-bottom: 25px; 
+            font-size: 16px;
+            color: #cccccc;
+        }
+        
+        .footer-bottom {
+            display: flex; justify-content: center; padding: 20px 10%;
+            border-top: 1px solid #222; background-color: #0a0a0a; font-size: 12px;
+        }
+        
+        @media (max-width: 992px) {
+            .features-grid, .test-grid { grid-template-columns: repeat(2, 1fr); }
+            .why-choose { flex-direction: column; }
+            .why-image { min-height: 300px; }
+            .footer-contact { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+        }
+        @media (max-width: 768px) {
+            .features-grid, .test-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">ECOIA</div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>SISTEMA INTELIGENTE - ECOIA</h1>
+            <p>O melhor software com Inteligência Artificial para você aprender, projetar e orçar sistemas de energia solar fotovoltaica. Acesse hoje mesmo nossa plataforma e inicie seus projetos em energia solar de forma rápida e otimizada. Aproveite!</p>
+            
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/l2z5Nk4o9cc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="hero-footer-text">
+                SOLICITE JÁ O ACESSO AO ECOIA. ACOMPANHA CENTENAS DE PROJETOS PRONTOS.<br>
+                VOCÊ TERÁ ACESSO AO CURSO DE PROJETOS FOTOVOLTAICOS E MAIS DE 10 MIL APOSTILAS DO SETOR.<br>
+                DE BÔNUS VC TERÁ ACESSO AO APLICATIVO PARA GERENCIAR SEUS PROJETOS PELO CELULAR.
+            </div>
+
+            <a href="#" class="btn-acesso">ACESSO</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="features-header">
+            <h2>SOFTWARE ECOIA</h2>
+            <p>O EcoIA é um software web que nos auxilia na criação e gestão de projetos de energia solar. Através dele é possível dimensionar sistemas, calcular viabilidade econômica e gerar propostas comerciais com ajuda de Inteligência Artificial, do básico ao avançado.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-cloud"></i></div>
+                <h3>100% ONLINE</h3>
+                <p>O software não precisa de instalação. Acesse de qualquer lugar através do seu navegador, com todos os seus projetos salvos na nuvem.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-project-diagram"></i></div>
+                <h3>ELABORE PROJETOS</h3>
+                <p>Com o programa você pode elaborar diagramas unifilares, dimensionar arranjos fotovoltaicos e inversores facilmente.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>OTIMIZAÇÃO COM IA</h3>
+                <p>Nossa Inteligência Artificial analisa padrões de consumo e sugere os melhores equipamentos e angulações para maior eficiência energética.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3>TREINE SUA MENTE</h3>
+                <p>Crie desde sistemas residenciais simples até usinas complexas. Muitas empresas e integradores já utilizam nossa plataforma.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-choose">
+        <div class="why-image"></div>
+        <div class="why-text">
+            <div class="subtitle">EcoIA Plataforma Solar</div>
+            <h2>POR QUE ACESSAR O ECOIA?</h2>
+            <p>Não é necessário nenhum tipo de instalação, você apenas faz login na plataforma, permitindo realizar a inserção dos dados do cliente, desenhar um diagrama e posteriormente realizar a simulação financeira e energética do projeto. Com uma proposta excelente, o EcoIA oferece recursos bastante úteis através de uma interface simples e intuitiva e o melhor: com a potência da Inteligência Artificial trabalhando a seu favor.</p>
+            <ul class="why-list">
+                <li><i class="fas fa-check-circle"></i> Elabore projetos fotovoltaicos do zero rapidamente;</li>
+                <li><i class="fas fa-check-circle"></i> Realize simulações precisas de geração e payback financeiro;</li>
+                <li><i class="fas fa-check-circle"></i> Salve, imprima e envie propostas completas aos clientes;</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Fundo de Energia Solar animado ao rolar a tela -->
+    <section class="testimonials">
+        <h2>O QUE DIZEM NOSSOS USUÁRIOS</h2>
+        <div class="test-grid">
+            <div class="test-card">
+                <i class="fas fa-quote-left"></i>
+                <p>"A inteligência artificial do EcoIA revolucionou a forma como faço meus orçamentos. O que eu levava horas para calcular, agora faço em poucos minutos e com muito mais precisão. Meus clientes adoram as propostas!"</p>
+                <h4>— João Silva, Engenheiro Eletricista</h4>
+            </div>
+            <div class="test-card">
+                <i class="fas fa-quote-left"></i>
+                <p>"Muito fácil de usar. O fato de ser totalmente online me permite acessar meus projetos até mesmo pelo celular enquanto estou na obra verificando o telhado do cliente. Excelente ferramenta!"</p>
+                <h4>— Maria Fernandes, Integradora Solar</h4>
+            </div>
+            <div class="test-card">
+                <i class="fas fa-quote-left"></i>
+                <p>"O recurso de dimensionamento automático sugerindo o melhor inversor salvou meu negócio. Reduziu meus erros de projeto a zero. Recomendo para qualquer empresa de energia solar."</p>
+                <h4>— Carlos Pereira, Instalador</h4>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-contact">
+            <div class="contact-item">
+                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="contact-info">
+                    <strong>PORTAL ENERGIA SOLAR</strong>
+                    <span>O portal nº 1 dos Integradores</span>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                <div class="contact-info">
+                    <strong>WHATSAPP</strong>
+                    <span>+55 (11) 99999-9999</span>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                <div class="contact-info">
+                    <strong>E-MAIL</strong>
+                    <span>contato@ecoia.com.br</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Sobre a EcoIA</h4>
+                <p>A EcoIA nasceu com o propósito de revolucionar o mercado de energia solar através da inteligência artificial. Nossa plataforma foi desenvolvida de ponta a ponta para facilitar o dia a dia de engenheiros, integradores e instaladores, oferecendo a melhor e mais avançada ferramenta online para dimensionamento e simulação de viabilidade econômica.</p>
+                <p>Acreditamos que a tecnologia é a peça-chave para acelerar a transição energética. Nosso compromisso contínuo é fornecer um software robusto, intuitivo e acessível de qualquer dispositivo para que você possa focar no que realmente importa: entregar projetos fotovoltaicos de altíssima excelência para seus clientes.</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>Copyright © 2026 All Rights Reserved - EcoIA Oficial | Desenvolvido com IA</div>
+        </div>
+    </footer>
+
+</body>
+</html>
